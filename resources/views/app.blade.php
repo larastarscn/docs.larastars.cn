@@ -14,10 +14,10 @@
 	<!--[if lte IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-    <link href='https://fonts.googleapis.com/css?family=Miriam+Libre:400,700|Source+Sans+Pro:200,400,700,600,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='/assets/css/font.css' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="{{ elixir('assets/css/laravel.css') }}">
 	<link rel="apple-touch-icon" href="/favicon.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+    <script src="/assets/js/vue.min.js"></script>
 </head>
 <body class="@yield('body-class', 'docs') language-php">
 
@@ -71,17 +71,13 @@
 	</script>
 
 	@include('partials.algolia_template')
+  @include('partials.helper')
 
 	<script src="{{ elixir('assets/js/laravel.js') }}"></script>
 	<script src="/assets/js/viewport-units-buggyfill.js"></script>
 	<script>window.viewportUnitsBuggyfill.init();</script>
-	<script>
-		var _gaq=[['_setAccount','UA-23865777-1'],['_trackPageview']];
-		(function(d,t){
-			var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-			g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-			s.parentNode.insertBefore(g,s)
-		}(document,'script'));
-	</script>
+	<div class="cnzz" style="display:none;">
+		<script src="https://s95.cnzz.com/z_stat.php?id=1260363202&web_id=1260363202" language="JavaScript"></script>	
+	</div>
 </body>
 </html>

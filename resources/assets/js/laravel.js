@@ -10,6 +10,32 @@ new Vue({
   }
 })
 
+new Vue({
+  el: '#slide_helper',
+  data: {
+    languages: ['en', 'zh']
+  },
+  methods: {
+    switchLanguage: function () {
+      window.location.href = window.location.href.replace(/\/zh\/|\/en\//, '/'+ this.language.toLowerCase() +'/')
+    }
+  },
+  computed: {
+    language: function () {
+      var current = document.location.pathname.match(/\/(.+)\/\d/)[1]
+      return this.languages.filter(function (language) {
+          return language != current
+      }).join('').toUpperCase()
+    }
+  },
+  ready: function () {
+    window.onscroll = function () {
+      var bottom = document.documentElement.offsetHeight - document.documentElement.clientHeight - window.pageYOffset + 40
+      this.$el.style.bottom =  bottom + 'px'
+    }.bind(this)
+  }
+})
+
 
 $(function() {
   // Smooth scroll to anchor

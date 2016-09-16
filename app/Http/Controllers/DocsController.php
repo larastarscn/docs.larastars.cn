@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Documentation;
+use Illuminate\Http\Request;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DocsController extends Controller
@@ -30,9 +31,10 @@ class DocsController extends Controller
      *
      * @return Response
      */
-    public function showRootPage()
+    public function showRootPage(Request $request)
     {
-        return redirect('docs/'.DEFAULT_VERSION);
+        $language = $request->cookie('language', DEFAULT_LANGUAGE);
+        return redirect('/'.$language.'/'.DEFAULT_VERSION);
     }
 
     /**
@@ -42,10 +44,13 @@ class DocsController extends Controller
      * @param  string|null $page
      * @return Response
      */
-    public function show($version, $page = null)
+    public function show($language, $version, $page = null)
     {
+        if (! $this->isLanguage($language)) {
+            return redirect(DEFAULT_LANGUAGE.'/'.DEFAULT_VERSION.'/'.$version, 301);
+        }
         if (! $this->isVersion($version)) {
-            return redirect('docs/'.DEFAULT_VERSION.'/'.$version, 301);
+            return redirect($language.'/'.DEFAULT_VERSION.'/'.$version, 301);
         }
 
         if (! defined('CURRENT_VERSION')) {
@@ -53,36 +58,39 @@ class DocsController extends Controller
         }
 
         $sectionPage = $page ?: 'installation';
-        $content = $this->docs->get($version, $sectionPage);
+        $content = $this->docs->get($language, $version, $sectionPage);
 
         if (is_null($content)) {
             abort(404);
         }
 
-        $title = (new Crawler($content))->filterXPath('//h1');
+        $crawler = new Crawler();
+        $crawler->addHtmlContent($content);
+        $title = $crawler->filterXPath('//h1');
 
         $section = '';
 
-        if ($this->docs->sectionExists($version, $page)) {
+        if ($this->docs->sectionExists($language, $version, $page)) {
             $section .= '/'.$page;
         } elseif (! is_null($page)) {
-            return redirect('/docs/'.$version);
+            return redirect('/'.$language.'/'.$version);
         }
 
         $canonical = null;
 
-        if ($this->docs->sectionExists(DEFAULT_VERSION, $sectionPage)) {
-            $canonical = 'docs/'.DEFAULT_VERSION.'/'.$sectionPage;
+        if ($this->docs->sectionExists($language, DEFAULT_VERSION, $sectionPage)) {
+            $canonical = $language.'/'.DEFAULT_VERSION.'/'.$sectionPage;
         }
 
         return view('docs', [
             'title' => count($title) ? $title->text() : null,
-            'index' => $this->docs->getIndex($version),
+            'index' => $this->docs->getIndex($language, $version),
             'content' => $content,
             'currentVersion' => $version,
             'versions' => Documentation::getDocVersions(),
             'currentSection' => $section,
             'canonical' => $canonical,
+            'language' => $language
         ]);
     }
 
@@ -95,5 +103,16 @@ class DocsController extends Controller
     protected function isVersion($version)
     {
         return in_array($version, array_keys(Documentation::getDocVersions()));
+    }
+
+    /**
+     * Determine if the given URL segment is a valid language
+     *
+     * @param  string  $language
+     * @return bool
+     */
+    protected function isLanguage($language)
+    {
+        return in_array($language, array_keys(Documentation::getDocLanguages()));
     }
 }
