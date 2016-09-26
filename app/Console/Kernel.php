@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //
+        // update en docs
+        $schedule->exec('sh '. base_path('build/en.sh'))->dayliAt('07:00')->sendOutputTo(storage_path('logs/en.sh.log'));
     }
 
     /**
