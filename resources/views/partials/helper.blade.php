@@ -50,5 +50,5 @@
 </style>
 <div id="slide_helper">
   <div class="translator" @click="switchLanguage">@{{language}}</div>
-  <div class="socialite"><a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=430d0963b334cc98c5724f8cd3a18a4e64d1c45c81aa29c3ec85d0c242c67455"><i class="iconfont icon-qq"></i></a></div>
+  <div class="socialite" onClick="javascript: window.alert('Laravel 学习与实战 QQ 群：241857168');"><a target="_blank" href="javascript: void(0);"><i class="iconfont icon-qq"></i></a></div>
 </div>
