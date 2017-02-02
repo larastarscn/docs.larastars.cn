@@ -10,5 +10,6 @@ refresh()
 }
 
 refresh 5.3
+refresh 5.4
 
 cd $base && /usr/local/bin/php artisan docs:clear-cache
