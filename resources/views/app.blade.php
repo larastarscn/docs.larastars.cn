@@ -38,9 +38,7 @@
 			@include('partials.main-nav')
 		</ul>
 
-        @if (Request::is('docs*') && isset($currentVersion))
 			@include('partials.switcher')
-		@endif
 
         <div class="responsive-sidebar-nav">
 			<a href="#" class="toggle-slide menu-link btn">&#9776;</a>

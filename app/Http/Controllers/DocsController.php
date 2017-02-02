@@ -60,6 +60,11 @@ class DocsController extends Controller
         $sectionPage = $page ?: 'installation';
         $content = $this->docs->get($language, $version, $sectionPage);
 
+        if (is_null($content) && $language === 'zh') {
+            $language = 'en';
+            $content = $this->docs->get($language, $version, $sectionPage);
+        }
+
         if (is_null($content)) {
             abort(404);
         }
