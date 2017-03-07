@@ -34,7 +34,8 @@ class DocsController extends Controller
     public function showRootPage(Request $request)
     {
         $language = $request->cookie('language', DEFAULT_LANGUAGE);
-        return redirect('/'.$language.'/'.DEFAULT_VERSION);
+        $version = $request->cookie('version', DEFAULT_VERSION);
+        return redirect('/'.$language.'/'.$version);
     }
 
     /**
@@ -87,7 +88,7 @@ class DocsController extends Controller
             $canonical = $language.'/'.DEFAULT_VERSION.'/'.$sectionPage;
         }
 
-        return view('docs', [
+        $data = [
             'title' => count($title) ? $title->text() : null,
             'index' => $this->docs->getIndex($language, $version),
             'content' => $content,
@@ -96,7 +97,20 @@ class DocsController extends Controller
             'currentSection' => $section,
             'canonical' => $canonical,
             'language' => $language
-        ]);
+        ];
+
+        if ($this->shouldSendCookie($language, $version)) {
+            return response()->view('docs', $data, 200)
+                            ->cookie('language', $language, 60 * 24 * 90)
+                            ->cookie('version', $version, 60 * 24 * 90);
+        } 
+
+        return  view('docs', $data);
+    }
+
+    protected function shouldSendCookie($language, $version)
+    {
+        return $language !== request()->cookie('language') || $version !== request()->cookie('version');
     }
 
     /**
