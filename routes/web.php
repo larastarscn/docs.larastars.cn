@@ -3,7 +3,7 @@
 /**
  * Set the default documentation version...
  */
-define('DEFAULT_VERSION', '5.3');
+define('DEFAULT_VERSION', '5.5');
 define('DEFAULT_LANGUAGE', 'zh');
 
 /**

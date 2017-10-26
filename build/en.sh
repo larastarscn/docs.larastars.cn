@@ -1,5 +1,5 @@
 #!/bin/bash
-base=/home/www/docs.larastars.cn
+base=$(pwd)
 docs=${base}/resources/docs/en
 origin=https://github.com/laravel/docs
 
@@ -9,6 +9,7 @@ refresh()
   rm -rf ${docs}/${version} && cd ${docs}/ && git clone ${origin} -b ${version} ${version} && cd ${version} && sed -ig "s/\/docs\/{{version}}/\/{{language}}\/{{version}}/g" `ls`
 }
 
-refresh 5.4
+refresh 5.5
+refresh master
 
 cd $base && /usr/local/bin/php artisan docs:clear-cache
